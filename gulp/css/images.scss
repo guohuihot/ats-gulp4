@@ -1,0 +1,28 @@
+{%- set tags = [] -%}
+{% for name, data in cssData -%}
+  {%- set tag = sign + '-' + fName + '-' + name -%}
+  {%- set tags = tags|merge(['$' + tag]) -%}
+
+${{tag}}:({{ data.width|cssSize }}, {{data.height|cssSize}}, {{data.offset_x|cssSize}}, {{data.offset_y|cssSize}}, {{tag}});
+{% endfor %}
+${{sign}}-{{fName}}: ({{tags}});
+
+@mixin {{sign}}-{{fName}}($sprites) {
+  %ico{{fName}} {
+      display: inline-block;
+      *zoom: 1;
+      *display: inline;
+      vertical-align: middle;
+      line-height: 300px;
+      overflow: hidden;
+      background-image: url({{fUrl}});
+  }
+  @each $sprite in $sprites {
+    .#{nth($sprite, 5)} {
+        width: nth($sprite, 1);
+        height: nth($sprite, 2);
+        background-position: nth($sprite, 3) nth($sprite, 4);
+        @extend %ico{{fName}};
+    }
+  }
+}
